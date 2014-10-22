@@ -1,7 +1,8 @@
 package app;
 
 import java.io.*;
-
+import java.util.List;
+import java.util.ArrayList;
 import org.apache.commons.io.FileUtils;
 
 /**
@@ -16,13 +17,21 @@ public class SalesTaxCalculator {
 
     File srcFile = getFile(userInput);
     File destFile = makeReceipt(userInput);
+    List<String> items = parseFile(srcFile);
+    
+
+    System.out.println(items);
+  }
+  
+  private static List<String> parseFile (File srcFile) {
     try {
-      FileUtils.copyFile(srcFile, destFile);
+      List<String> items = FileUtils.readLines(srcFile);
+      return items;
     } catch (Exception error) {
       error.printStackTrace();
+      List<String> items = new ArrayList<String>();
+      return items;
     }
-
-    System.out.println("The answer is: " + userInput);
   }
 
   private static String getInput(String prompt) {
