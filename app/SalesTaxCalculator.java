@@ -16,11 +16,37 @@ public class SalesTaxCalculator {
       "Enter file name of the purchase order: ");
 
     File srcFile = getFile(userInput);
-    File destFile = makeReceipt(userInput);
     List<String> items = parseFile(srcFile);
     
+    String item = items.get(0);
+    System.out.println(item);
+    String[] productPrice = item.split(" at ");
+    String product = productPrice[0];
+    double price = setPrice(productPrice[1]);
+
+    System.out.println(price);
+    
+    File destFile = makeReceipt(userInput);
+    try {
+      FileUtils.writeLines(destFile, items);
+    } catch (IOException error) {
+      System.out.println("Nothing to print out");
+      return;
+    }
+
 
     System.out.println(items);
+  }
+  
+  private static double setPrice (String productPrice) throws NumberFormatException {
+    try {
+      double num = Double.parseDouble(productPrice);
+      return num;
+    } catch (NumberFormatException error) {
+      System.out.println("Could not parse a valid number for price");
+      System.exit(0);
+      return 0;
+    }
   }
   
   private static List<String> parseFile (File srcFile) {
