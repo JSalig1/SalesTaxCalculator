@@ -8,8 +8,13 @@ import org.apache.commons.io.FileUtils;
 public class ReceiptWriter {
 
   public static void generateReceipt(PurchaseOrder purchaseOrder, Cart cart) {
-    File receipt = makeReceipt(purchaseOrder);
-    writeReciept(receipt, cart);
+    if (cart.contents.isEmpty()) {
+      System.out.println("Nothing to print out");
+    } else {
+      File receipt = makeReceipt(purchaseOrder);
+      writeReciept(receipt, cart);
+      System.out.println("Receipt Generated");
+    }
   }
 
   private static File makeReceipt(PurchaseOrder purchaseOrder) {

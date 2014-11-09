@@ -8,7 +8,9 @@ public class InputPrompt {
     BufferedReader stdin = new BufferedReader(
       new InputStreamReader(System.in));
 
-    System.out.print("Enter file name of the purchase order: ");
+    System.out.print(
+      "Enter file name, not including the file extension, of the purchase order: "
+    );
     System.out.flush();
 
     try {

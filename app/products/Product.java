@@ -2,7 +2,8 @@ package app.products;
 
 import app.taxes.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class Product {
 
@@ -12,10 +13,10 @@ public class Product {
   public BigDecimal tax;
 
   public Product(String item) {
-    ArrayList<String> fields = extractFields(item);
-    this.quantity = setQuantity(fields.get(0));
-    this.description = fields.get(1);
-    this.price = setPrice(fields.get(2));
+    String[] fields = extractFields(item);
+    this.quantity = setQuantity(fields[0]);
+    this.description = fields[1];
+    this.price = setPrice(fields[2]);
     this.tax = BigDecimal.ZERO;
   }
 
@@ -28,19 +29,37 @@ public class Product {
     return pricePlusTax;
   }
 
-  private ArrayList<String> extractFields (String item) {
-    ArrayList<String> parts = new ArrayList<String>();
-    String[] sliceQuanity = item.split(" ", 2);
-    parts.add(sliceQuanity[0]);
-    String[] slicePrice = sliceQuanity[1].split(" at ");
-    parts.add(slicePrice[0]);
-    parts.add(slicePrice[1]);
-    return parts;
+  private String[] extractFields (String item) {
+    Pattern pattern = Pattern.compile("^(\\S+)\\s(.*?)\\sat\\s(.*)$");
+    Matcher matcher = pattern.matcher(item);
+    try {
+      matcher.find();
+      String[] parts = new String[]{matcher.group(1),matcher.group(2),matcher.group(3)};
+      return parts;
+    } catch (IllegalStateException error) {
+      System.out.println(
+        "Your file has entries that are formatted incorrectly." + "\n" +
+        "Entries must conform to 'X item at X.XX'" + "\n" +
+        "One item per line." + "\n" +
+        "No line skipping."
+      );
+      System.exit(0);
+      return new String[] {};
+    }
   }
 
-  private BigDecimal setQuantity (String fieldValue) {
-    BigDecimal quantity = new BigDecimal(fieldValue);
-    return quantity;
+  private BigDecimal setQuantity (String fieldValue) throws NumberFormatException {
+    try {
+      BigDecimal quantity = new BigDecimal(fieldValue);
+      return quantity;
+    } catch (NumberFormatException error) {
+      System.out.println(
+        "Could not parse a valid number for quantity" + "\n" +
+        "Make sure your entries in your file are formatted 'X item at X.XX'"
+      );
+      System.exit(0);
+      return BigDecimal.ZERO;
+    }
   }
 
   private BigDecimal setPrice (String fieldValue) throws NumberFormatException {
@@ -48,7 +67,10 @@ public class Product {
       BigDecimal num = new BigDecimal(fieldValue);
       return num;
     } catch (NumberFormatException error) {
-      System.out.println("Could not parse a valid number for price");
+      System.out.println(
+        "Could not parse a valid number for quantity" + "\n" +
+        "Make sure your entries in your file are formatted 'X item at X.XX'"
+      );
       System.exit(0);
       return BigDecimal.ZERO;
     }

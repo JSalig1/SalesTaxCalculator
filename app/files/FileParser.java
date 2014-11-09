@@ -23,9 +23,11 @@ public class FileParser {
       List<String> items = FileUtils.readLines(srcFile);
       return items;
     } catch (Exception error) {
-      error.printStackTrace();
-      List<String> items = new ArrayList<String>();
-      return items;
+      System.out.println(
+        "File not found. Be sure the file is in the same directory as this program and try again."
+      );
+      System.exit(0);
+      return new ArrayList<String>();
     }
   }
 }

@@ -1,6 +1,5 @@
 package app;
 
-import app.exemptions.ExemptionChecker;
 import app.files.*;
 import app.interfaces.InputPrompt;
 import app.products.*;
@@ -8,7 +7,7 @@ import app.taxes.*;
 
 /**
  * @author Jeremy Salig
- * @version 1.0
+ * @version 2.0
  */
 
 public class SalesTaxCalculator {
